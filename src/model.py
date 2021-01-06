@@ -149,6 +149,16 @@ np.exp(ps['scale'])
 
 plt.bar(dates, cases[i,:])
 
+def plotR(i):
+    x = [dates[i] for i in periodi]
+    out, R = jax.vmap(model)(state.samples())
+    S = out[:,:,:,0]
+    R = np.exp(R[:, i, ...])*S[:,i,periodi]
+    # plt.plot(x, np.mean(R, 0))
+    for i in range(R.shape[0]):
+        plt.plot(x, R[i,...], color = 'blue', alpha = 0.5, linewidth = 0.1)
+    plt.ylim(0, 3)
+
 plotR(i)
 
 plt.plot([dates[i] for i in periodi], np.exp(R)[i,:])
@@ -159,16 +169,6 @@ plt.plot(dates, out[i,:,2]) # R
 plt.plot(dates, out[i,:,3]) # caught
 
 plt.plot(dates, sigmoid((date/30)/ps['cChange'][0] + ps['capacity'][0,weekday]))
-
-def plotR(i):
-    x = [dates[i] for i in periodi]
-    out, R = jax.vmap(model)(state.samples())
-    S = out[:,:,:,0]
-    R = np.exp(R[:, i, ...])*S[:,i,periodi]
-    # plt.plot(x, np.mean(R, 0))
-    for i in range(R.shape[0]):
-        plt.plot(x, R[i,...], color = 'blue', alpha = 0.5, linewidth = 0.1)
-    plt.ylim(0, 3)
 
 # import pickle
 # pickle.dump(state, open("state.p", "wb"))
